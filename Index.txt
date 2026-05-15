@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servicio Telemático - Parcial 3</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f9; padding: 50px; }
+        .container { background: white; padding: 30px; border-radius: 10px; shadow: 0 4px 8px rgba(0,0,0,0.1); display: inline-block; }
+        h1 { color: #2c3e50; }
+        .status { color: #27ae60; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Servicio Telemático de Producción</h1>
+        <p>Este servicio ha sido desplegado exitosamente usando <strong>Docker</strong> sobre <strong>AWS</strong>.</p>
+        <p>Estado del Contenedor: <span class="status">Activo y Persistente</span></p>
+        <hr>
+        <small>Desarrollado por: Julián - 3er Semestre Ingeniería de Sistemas</small>
+    </div>
+</body>
+</html>
