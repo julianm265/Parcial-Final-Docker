@@ -1,0 +1,11 @@
+# 1. Usamos una imagen base ligera de Nginx (servidor web de producción)
+FROM nginx:alpine
+
+# 2. Copiamos tu archivo index.html desde tu PC a la carpeta del servidor dentro del contenedor
+COPY index.html /usr/share/nginx/html/index.html
+
+# 3. Informamos que el contenedor escuchará en el puerto 80
+EXPOSE 80
+
+# 4. Iniciamos el servidor Nginx (esto ya viene por defecto en la imagen, pero es bueno tenerlo claro)
+CMD ["nginx", "-g", "daemon off;"]
