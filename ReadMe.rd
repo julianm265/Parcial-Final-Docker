@@ -9,11 +9,12 @@ Este proyecto implementa un servicio web escalable a nivel de producción, despl
 
 ## Guía de Despliegue (Paso a Paso)
 1. **Clonación del repositorio:**
-   `git clone https://github.com/tu-usuario/nombre-repo.git`
+   `git clone https://github.com/julianm265/Parcial-Final-Docker.git`
 2. **Construcción de la imagen (Automatización):**
-   `docker build -t servicio-parcial-final .`
+   `cd Parcial-Final-Docker`
+   `sudo docker build -t servicio-produccion .`
 3. **Despliegue del contenedor:**
-   `docker run -d --name produccion-web -p 80:80 servicio-parcial-final`
+   `sudo docker run -d --name contenedor-web -p 80:80 servicio-produccion`
 
 ## Mantenimiento
 Para realizar cambios, edite el archivo `index.html`, realice un `git push` desde su entorno local y un `git pull` en el servidor de producción antes de reconstruir la imagen.
