@@ -2,7 +2,7 @@
 FROM nginx:alpine
 
 # 2. Copiamos tu archivo index.html desde tu PC a la carpeta del servidor dentro del contenedor
-COPY index.html /usr/share/nginx/html/index.html
+COPY Index.html /usr/share/nginx/html/index.html
 
 # 3. Informamos que el contenedor escuchará en el puerto 80
 EXPOSE 80
