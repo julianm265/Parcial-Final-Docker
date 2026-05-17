@@ -1,4 +1,121 @@
-<script>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cineplex - Control de Taquilla</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 { color: #1a365d; margin-bottom: 5px; }
+        .badge {
+            background-color: #2f855a;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        .screen {
+            background: #cbd5e0;
+            height: 20px;
+            width: 80%;
+            margin: 0 auto 30px auto;
+            border-bottom-left-radius: 50%;
+            border-bottom-right-radius: 50%;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            color: #4a5568;
+            font-size: 0.75rem;
+            line-height: 20px;
+        }
+        .seating-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        .seat {
+            background-color: #e2e8f0;
+            border: 2px solid #cbd5e0;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        .seat:hover { background-color: #edf2f7; transform: scale(1.05); }
+        .seat.selected { background-color: #4299e1; border-color: #2b6cb0; color: white; }
+        .seat.occupied { background-color: #e53e3e; border-color: #9b2c2c; color: white; cursor: not-allowed; }
+        
+        .legend { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; font-size: 0.9rem; }
+        .legend-item { display: flex; align-items: center; gap: 5px; }
+        .legend-box { width: 15px; height: 15px; border-radius: 3px; }
+
+        .panel-ventas { background: #f7fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; }
+        button {
+            background-color: #1a365d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        button:hover { background-color: #2a4365; }
+        button:disabled { background-color: #cbd5e0; cursor: not-allowed; }
+        footer { margin-top: 30px; color: #718096; font-size: 0.85rem; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 15px; width: 100%; max-width: 600px;}
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Cineplex - Sistema de Taquilla</h1>
+        <span class="badge">Servicio Seguro HTTPS Activo</span>
+        
+        <div class="screen">PANTALLA</div>
+
+        <div class="seating-grid" id="seatingGrid"></div>
+
+        <div class="legend">
+            <div class="legend-item"><div class="legend-box" style="background: #e2e8f0; border: 1px solid #cbd5e0;"></div> Disponible</div>
+            <div class="legend-item"><div class="legend-box" style="background: #4299e1;"></div> Seleccionado</div>
+            <div class="legend-item"><div class="legend-box" style="background: #e53e3e;"></div> Ocupado</div>
+        </div>
+
+        <div class="panel-ventas">
+            <p>Asientos seleccionados: <strong id="selectedSeatsTxt">Ninguno</strong></p>
+            <p>Total a pagar: <strong id="totalPriceTxt">$0 COP</strong></p>
+            <button id="btnVender" disabled>Confirmar Venta y Reservar</button>
+        </div>
+    </div>
+
+    <footer>
+        Desarrollado por: Julián - 3er Semestre Ingeniería de Sistemas<br>
+        Infraestructura: AWS EC2 (Ubuntu) | Contenedor: Nginx (Alpine) | Seguridad: SSL/TLS
+    </footer>
+
+    <script>
         const grid = document.getElementById('seatingGrid');
         const selectedSeatsTxt = document.getElementById('selectedSeatsTxt');
         const totalPriceTxt = document.getElementById('totalPriceTxt');
@@ -6,11 +123,8 @@
         
         const PRECIO_TIQUETE = 12000; 
         let asientosSeleccionados = [];
-
-        // CORREGIDO: Variable unida sin espacios extraños
         const ocupadosIniciales = [3, 7, 12, 14, 22];
 
-        // Generar la matriz de 25 asientos dinámicamente
         for (let i = 1; i <= 25; i++) {
             const seat = document.createElement('div');
             seat.classList.add('seat');
@@ -24,7 +138,6 @@
             grid.appendChild(seat);
         }
 
-        // Lógica para seleccionar/deseleccionar asientos
         function toggleAsiento(id, elemento) {
             if (elemento.classList.contains('selected')) {
                 elemento.classList.remove('selected');
@@ -36,11 +149,10 @@
             actualizarPanel();
         }
 
-        // Actualizar cálculos en la interfaz
         function actualizarPanel() {
             if (asientosSeleccionados.length > 0) {
                 selectedSeatsTxt.innerText = asientosSeleccionados.join(', ');
-                totalPriceTxt.innerText = `$${(asientosSeleccionados.length * PRECIO_TIQUETE).toLocaleString()} COP`;
+                totalPriceTxt.innerText = '$' + (asientosSeleccionados.length * PRECIO_TIQUETE).toLocaleString() + ' COP';
                 btnVender.disabled = false;
             } else {
                 selectedSeatsTxt.innerText = 'Ninguno';
@@ -49,9 +161,8 @@
             }
         }
 
-        // Simular la confirmación del tiquete
         btnVender.addEventListener('click', () => {
-            alert(`¡Venta Exitosa!\nAsientos reservados: ${asientosSeleccionados.join(', ')}\nTotal: ${totalPriceTxt.innerText}\n\nLos asientos ahora pasarán a estado 'Ocupado'.`);
+            alert('Venta Exitosa!\nAsientos reservados: ' + asientosSeleccionados.join(', ') + '\nTotal: ' + totalPriceTxt.innerText);
             
             const seats = document.querySelectorAll('.seat.selected');
             seats.forEach(seat => {
@@ -65,3 +176,5 @@
             actualizarPanel();
         });
     </script>
+</body>
+</html>
